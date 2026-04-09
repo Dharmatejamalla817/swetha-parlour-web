@@ -69,7 +69,6 @@ def book():
     conn.close()
     return render_template('confirm.html', name=name)
 
-@app.route('/admin')
 def admin():
     conn = get_db_connection()
     bookings = conn.execute('''
@@ -77,8 +76,19 @@ def admin():
         FROM bookings 
         JOIN services ON bookings.service_id = services.id
     ''').fetchall()
+    
+    # Add a "calculated end time" to each booking for display
+    enhanced_bookings = []
+    for b in bookings:
+        # Turn it into a dictionary so we can add a new key
+        b_dict = dict(b)
+        start = datetime.strptime(b['booking_time'], '%H:%M')
+        end = (start + timedelta(hours=2)).strftime('%I:%M %p') # Format as 02:00 PM
+        b_dict['end_time'] = end
+        enhanced_bookings.append(b_dict)
+        
     conn.close()
-    return render_template('admin.html', bookings=bookings)
+    return render_template('admin.html', bookings=enhanced_bookings)
 
 if __name__ == '__main__':
     app.run(debug=True)
