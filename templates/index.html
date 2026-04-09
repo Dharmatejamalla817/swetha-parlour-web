@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swetha Beauty Parlour</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>SWETHA BEAUTY PARLOUR</h1>
+        <p>Premium Services for a Radiant You</p>
+    </header>
+
+    <section class="menu-section">
+        <h2>Our Price List</h2>
+        <div class="services-container">
+            {% for service in services %}
+            <div class="service-card">
+                <span class="category-tag">{{ service.category }}</span>
+                <h4>{{ service.name }}</h4>
+                <p class="price">Rs. {{ service.price }}/-</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="booking-section">
+        <h2>Book Your Appointment</h2>
+        <form action="/book" method="POST">
+            <input type="text" name="name" placeholder="Full Name" required>
+            <select name="service">
+                <option value="" disabled selected>Select a Service</option>
+                {% for service in services %}
+                <option value="{{ service.id }}">{{ service.name }} (Rs. {{ service.price }})</option>
+                {% endfor %}
+            </select>
+            <input type="date" name="date" required>
+            <input type="time" name="time" required>
+            <button type="submit" class="btn-book">Confirm Slot</button>
+        </form>
+    </section>
+</body>
+</html>
